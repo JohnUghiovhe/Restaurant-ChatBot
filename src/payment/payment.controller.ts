@@ -33,12 +33,12 @@ export class PaymentController {
       const result = await this.paymentService.verifyPayment(reference);
       return {
         success: result.success,
-        message: result.success 
-          ? 'Payment successful! Your order has been confirmed.' 
-          : result.message || 'Payment verification failed.',
+        message: result.success
+          ? 'Payment successful! Your order has been confirmed.'
+          : 'Payment verification failed.',
         data: result.data,
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         success: false,
         message: error.message || 'Payment verification failed.',

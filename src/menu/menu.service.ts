@@ -71,7 +71,7 @@ export class MenuService implements OnModuleInit {
         {
           name: 'Pounded Yam',
           description: 'Smooth pounded yam with egusi soup',
-          price: 2000,
+          price: 2200,
           category: 'Main Course',
           available: true,
         },

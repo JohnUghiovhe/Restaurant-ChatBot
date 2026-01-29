@@ -1,7 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { Session } from '../entities/session.entity';
 import { OrderService } from '../order/order.service';
 import { MenuService } from '../menu/menu.service';

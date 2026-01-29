@@ -1,7 +1,7 @@
 class ChatBot {
     constructor() {
         this.deviceId = this.getOrCreateDeviceId();
-        this.apiUrl = 'http://localhost:3000';
+        this.apiUrl = window.location.origin;
         this.currentOrder = null;
         this.menuItems = [];
         this.isSelectingMenu = false;
@@ -38,6 +38,7 @@ class ChatBot {
         const messageInput = document.getElementById('messageInput');
         const proceedPayment = document.getElementById('proceedPayment');
         const cancelPayment = document.getElementById('cancelPayment');
+        const closeSuccessModal = document.getElementById('closeSuccessModal');
 
         sendButton.addEventListener('click', () => this.sendMessage());
         messageInput.addEventListener('keypress', (e) => {
@@ -48,6 +49,19 @@ class ChatBot {
 
         proceedPayment.addEventListener('click', () => this.handlePayment());
         cancelPayment.addEventListener('click', () => this.closePaymentModal());
+        if (closeSuccessModal) {
+            closeSuccessModal.addEventListener('click', () => this.closeSuccessModal());
+        }
+    }
+
+    showSuccessModal() {
+        const modal = document.getElementById('successModal');
+        if (modal) modal.style.display = 'flex';
+    }
+
+    closeSuccessModal() {
+        const modal = document.getElementById('successModal');
+        if (modal) modal.style.display = 'none';
     }
 
     async sendMessage() {
@@ -204,16 +218,16 @@ window.addEventListener('DOMContentLoaded', () => {
     if (reference) {
         // Verify payment
         setTimeout(() => {
-            fetch(`http://localhost:3000/payment/verify?reference=${reference}`)
+            fetch(`${chatbot.apiUrl}/payment/verify?reference=${reference}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        chatbot.addBotMessage('✅ Payment successful! Your order has been confirmed and will be processed shortly.');
+                        chatbot.showSuccessModal();
+                        chatbot.addBotMessage('Payment successful! Your order has been confirmed and will be processed shortly.');
                         chatbot.addBotMessage('Select 1 to Place an order\nSelect 99 to checkout order\nSelect 98 to see order history\nSelect 97 to see current order\nSelect 0 to cancel order');
                     } else {
-                        chatbot.addBotMessage('❌ Payment verification failed. Please try again.');
+                        chatbot.addBotMessage('Payment verification failed. Please try again.');
                     }
-                    // Clean URL
                     window.history.replaceState({}, document.title, window.location.pathname);
                 })
                 .catch(err => {
