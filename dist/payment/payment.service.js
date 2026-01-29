@@ -31,7 +31,8 @@ let PaymentService = class PaymentService {
             throw new common_1.BadRequestException('Amount must be greater than 0');
         }
         const reference = `order_${orderId}_${Date.now()}`;
-        const callbackUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/payment/callback`;
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+        const callbackUrl = frontendUrl;
         try {
             const response = await axios_1.default.post(`${this.baseUrl}/transaction/initialize`, {
                 email,
