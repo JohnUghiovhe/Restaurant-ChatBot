@@ -281,8 +281,16 @@ Select 0 to cancel order`;
   async initializePaymentForOrder(orderId: string, email: string) {
     const order = await this.orderService.getOrderById(orderId);
     
+    if (!order) {
+      throw new BadRequestException('Order not found');
+    }
+    
     if (order.status !== OrderStatus.PLACED) {
       throw new BadRequestException('Order is not ready for payment');
+    }
+    
+    if (!order.totalAmount || order.totalAmount <= 0) {
+      throw new BadRequestException('Invalid order amount');
     }
 
     return this.paymentService.initializePayment(

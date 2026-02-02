@@ -245,8 +245,14 @@ Select 0 to cancel order`;
     }
     async initializePaymentForOrder(orderId, email) {
         const order = await this.orderService.getOrderById(orderId);
+        if (!order) {
+            throw new common_1.BadRequestException('Order not found');
+        }
         if (order.status !== order_entity_1.OrderStatus.PLACED) {
             throw new common_1.BadRequestException('Order is not ready for payment');
+        }
+        if (!order.totalAmount || order.totalAmount <= 0) {
+            throw new common_1.BadRequestException('Invalid order amount');
         }
         return this.paymentService.initializePayment(orderId, email, Number(order.totalAmount));
     }

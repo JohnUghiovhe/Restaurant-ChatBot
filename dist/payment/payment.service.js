@@ -53,10 +53,18 @@ let PaymentService = class PaymentService {
             return response.data;
         }
         catch (error) {
+            console.error('Payment initialization error:', {
+                message: error.message,
+                response: error.response?.data,
+                status: error.response?.status,
+            });
             if (error.response?.data?.message) {
                 throw new common_1.BadRequestException(`Payment initialization failed: ${error.response.data.message}`);
             }
-            throw new common_1.BadRequestException('Failed to initialize payment');
+            if (error.message) {
+                throw new common_1.BadRequestException(`Failed to initialize payment: ${error.message}`);
+            }
+            throw new common_1.BadRequestException('Failed to initialize payment. Please check your Paystack configuration.');
         }
     }
     async verifyPayment(reference) {

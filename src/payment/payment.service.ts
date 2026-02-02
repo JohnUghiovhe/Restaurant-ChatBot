@@ -48,10 +48,21 @@ export class PaymentService {
       await this.orderService.updatePaymentReference(orderId, reference);
       return response.data;
     } catch (error: any) {
+      console.error('Payment initialization error:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
+      
       if (error.response?.data?.message) {
         throw new BadRequestException(`Payment initialization failed: ${error.response.data.message}`);
       }
-      throw new BadRequestException('Failed to initialize payment');
+      
+      if (error.message) {
+        throw new BadRequestException(`Failed to initialize payment: ${error.message}`);
+      }
+      
+      throw new BadRequestException('Failed to initialize payment. Please check your Paystack configuration.');
     }
   }
 
