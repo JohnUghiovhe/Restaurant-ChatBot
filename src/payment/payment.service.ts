@@ -8,7 +8,14 @@ export class PaymentService {
   private readonly secretKey = process.env.PAYSTACK_SECRET_KEY || '';
   private readonly baseUrl = 'https://api.paystack.co';
 
-  constructor(private readonly orderService: OrderService) {}
+  constructor(private readonly orderService: OrderService) {
+    // Log configuration on startup (without exposing the full key)
+    console.log('Payment Service Configuration:', {
+      hasSecretKey: !!this.secretKey,
+      secretKeyPrefix: this.secretKey ? this.secretKey.substring(0, 7) + '...' : 'NOT SET',
+      frontendUrl: process.env.FRONTEND_URL || 'NOT SET',
+    });
+  }
 
   async initializePayment(orderId: string, email: string, amount: number) {
     if (!this.secretKey) {
@@ -22,6 +29,14 @@ export class PaymentService {
     const reference = `order_${orderId}_${Date.now()}`;
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
     const callbackUrl = frontendUrl;
+
+    console.log('Initializing payment:', {
+      orderId,
+      email,
+      amount,
+      reference,
+      callbackUrl,
+    });
 
     try {
       const response = await axios.post(
@@ -42,8 +57,14 @@ export class PaymentService {
       );
 
       if (!response.data?.status || !response.data?.data) {
+        console.error('Invalid Paystack response:', response.data);
         throw new BadRequestException('Invalid response from Paystack');
       }
+
+      console.log('Payment initialized successfully:', {
+        reference,
+        authUrl: response.data.data.authorization_url,
+      });
 
       await this.orderService.updatePaymentReference(orderId, reference);
       return response.data;
