@@ -141,17 +141,41 @@ class ChatBot {
                 }),
             });
 
+            if (!response.ok) {
+                let errorMessage = 'Failed to initialize payment. Please try again.';
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                    console.error('Payment initialization error:', errorData);
+                } catch (e) {
+                    console.error('Could not parse error response');
+                }
+                this.addBotMessage('❌ ' + errorMessage);
+                this.closePaymentModal();
+                return;
+            }
+
             const data = await response.json();
             
+            console.log('Payment response:', data);
+            
             if (data.status && data.data && data.data.authorization_url) {
+                // Close modal and show message before redirecting
+                this.closePaymentModal();
+                this.addBotMessage('🔄 Redirecting to payment page...');
                 // Redirect to Paystack payment page
-                window.location.href = data.data.authorization_url;
+                setTimeout(() => {
+                    window.location.href = data.data.authorization_url;
+                }, 1000);
             } else {
-                alert('Failed to initialize payment. Please try again.');
+                console.error('Invalid payment response:', data);
+                this.addBotMessage('❌ Failed to initialize payment. Invalid response from server.');
+                this.closePaymentModal();
             }
         } catch (error) {
-            alert('Error initializing payment. Please try again.');
-            console.error('Error:', error);
+            console.error('Payment error:', error);
+            this.addBotMessage('❌ Network error. Please check your connection and try again.');
+            this.closePaymentModal();
         }
     }
 
