@@ -1,0 +1,39 @@
+{
+  "name": "restaurant-chatbot",
+  "version": "1.0.0",
+  "description": "Restaurant chatbot that lets customers browse the menu, place orders, and pay online.",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "npx nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "npx nest start",
+    "start:dev": "npx nest start --watch",
+    "start:debug": "npx nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "dev:nodemon": "nodemon --watch src --ext ts,json --ignore dist --ignore \"*.db\" --exec \"npx ts-node src/main.ts\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@nestjs/common": "^11.1.12",
+    "@nestjs/core": "^11.1.12",
+    "@nestjs/platform-express": "^11.1.12",
+    "@nestjs/typeorm": "^11.0.0",
+    "axios": "^1.13.2",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.3",
+    "dotenv": "^17.2.3",
+    "nodemon": "^3.1.11",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.28"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.16",
+    "@types/node": "^25.0.10",
+    "ts-node": "^10.9.2"
+  }
+}

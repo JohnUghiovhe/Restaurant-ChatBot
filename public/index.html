@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Chatbot</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>🍽️ JayEff Foods</h1>
+            <p>Order your favorite meals with ease!</p>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+                <div class="message-content">
+                    <p>Welcome! Initializing chat...</p>
+                </div>
+            </div>
+        </div>
+        <div class="chat-input-container">
+            <input 
+                type="text" 
+                id="messageInput" 
+                placeholder="Type your message or select an option..."
+                autocomplete="off"
+            >
+            <button id="sendButton">Send</button>
+        </div>
+        <div class="payment-modal" id="paymentModal" style="display: none;">
+            <div class="modal-content">
+                <h2>Complete Payment</h2>
+                <p>Please enter your email to proceed with payment:</p>
+                <input type="email" id="paymentEmail" placeholder="your@email.com">
+                <div class="modal-buttons">
+                    <button id="proceedPayment">Proceed to Payment</button>
+                    <button id="cancelPayment">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div class="success-modal" id="successModal" style="display: none;">
+            <div class="modal-content success-modal-content">
+                <p class="success-message">Order placed successfully</p>
+                <button id="closeSuccessModal">OK</button>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
