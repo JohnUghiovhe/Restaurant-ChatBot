@@ -33,7 +33,7 @@
 
    **Variable 1:**
    - Key: `PAYSTACK_SECRET_KEY`
-   - Value: `sk_test_74ef5f0fe09b527de422d65dcbf48d5d67a92547`
+   - Value: `<YOUR_PAYSTACK_SECRET_KEY>`
 
    **Variable 2:**
    - Key: `FRONTEND_URL`

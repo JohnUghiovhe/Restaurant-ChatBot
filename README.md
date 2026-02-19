@@ -1,163 +1,179 @@
 # Restaurant Chatbot
 
-A TypeScript/NestJS-based restaurant chatbot that assists customers in placing orders for their preferred meals. The chatbot provides an interactive chat interface where customers can browse menu items, place orders, view order history, and make payments via Paystack.
+A restaurant ordering chatbot built with **NestJS (TypeScript)** on the backend and a simple **HTML/CSS/JavaScript** frontend. It lets users browse menu items, place and manage orders, and complete payment via Paystack.
+
+## Tech Stack
+
+- **Backend framework:** NestJS 11
+- **Language:** TypeScript
+- **ORM:** TypeORM
+- **Database:** SQLite
+- **Validation:** class-validator + class-transformer
+- **Payments:** Paystack (via Axios)
+- **Frontend:** Static HTML/CSS/Vanilla JavaScript
 
 ## Features
 
-- 💬 Interactive chat interface
-- 🍽️ Menu browsing and item selection
-- 🛒 Order management (place, view, cancel)
-- 📜 Order history
-- 💳 Paystack payment integration
-- 📅 Optional order scheduling
-- 🔒 Device-based session management (no authentication required)
-- ✅ Input validation
+- Interactive chat-based ordering flow
+- Menu browsing and item selection by number
+- After each item added, the menu remains visible for continued selection
+- Quick shortcuts while ordering:
+   - `99` checkout order
+   - `97` view current order
+   - `98` view order history
+   - `0` cancel order
+- Device-based session tracking (no login required)
+- Paystack payment initialization and verification
+- Render deployment support with health/config endpoint
 
 ## Prerequisites
 
-- Node.js (v14 or higher)
-- npm or yarn
-- Paystack test account (for payment integration)
+- Node.js 18+ (recommended)
+- npm
+- Paystack account (test key for development)
+
+## Environment Variables
+
+Create a `.env` file in the project root and set:
+
+```env
+PAYSTACK_SECRET_KEY=sk_test_your_paystack_secret_key_here
+FRONTEND_URL=http://localhost:3000
+PORT=3000
+```
+
+### Notes
+
+- `PAYSTACK_SECRET_KEY` is required for payment initialization.
+- `FRONTEND_URL` should be your deployed URL in production (for example, Render URL).
+- On Render, set these values in the service Environment tab.
 
 ## Installation
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd restaurant-chatbot
-```
-
-2. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Create a `.env` file in the root directory:
-```bash
-cp .env.example .env
-```
+## Running the App
 
-4. Update the `.env` file with your Paystack secret key:
-```
-PAYSTACK_SECRET_KEY=sk_test_your_paystack_secret_key_here
-FRONTEND_URL=http://localhost:3000
-```
+- Development (watch mode):
 
-## Running the Application
-
-1. Start the development server:
 ```bash
 npm run start:dev
 ```
 
-2. Open your browser and navigate to:
+- Build:
+
+```bash
+npm run build
 ```
-http://localhost:3000
+
+- Production:
+
+```bash
+npm run start:prod
 ```
 
-## Usage
+- Optional local ts-node + nodemon script:
 
-### Chatbot Options
+```bash
+npm run dev:nodemon
+```
 
-When you land on the chatbot page, you'll see the following options:
+Open the app at `http://localhost:3000`.
 
-- **Select 1** - Place an order (browse menu items)
-- **Select 99** - Checkout order
-- **Select 98** - See order history
-- **Select 97** - See current order
-- **Select 0** - Cancel order
+## Chat Flow
 
-### Placing an Order
+When the chatbot starts, use:
 
-1. Select option `1` to view available menu items
-2. Select a menu item by its number
-3. The item will be added to your current order
-4. You can add more items or proceed to checkout
+- `1` → place an order (show menu)
+- `99` → checkout
+- `98` → order history
+- `97` → current order
+- `0` → cancel current order
 
-### Checkout and Payment
+### Ordering Behavior
 
-1. Select option `99` to checkout your order
-2. If you have items in your cart, the order will be placed
-3. You'll be prompted to enter your email for payment
-4. You'll be redirected to Paystack to complete the payment
-5. After successful payment, you'll be redirected back with a confirmation
+After each successful item selection:
 
-### Viewing Orders
-
-- **Select 98** - View all your placed orders (order history)
-- **Select 97** - View your current pending order
-
-### Canceling Orders
-
-- **Select 0** - Cancel your current pending order
+- item is added to current order,
+- order summary is shown,
+- full menu is shown again,
+- user can continue selecting items or use shortcuts.
 
 ## API Endpoints
 
+### App
+
+- `GET /` - Serve chatbot UI
+- `GET /health` - Health and runtime config status
+
 ### Chat
-- `POST /chat/message` - Send a message to the chatbot
-- `GET /chat/init/:deviceId` - Initialize chat session
+
+- `POST /chat/message` - Process chat message
+- `GET /chat/init/:deviceId` - Initialize session
+- `POST /chat/payment/initialize` - Initialize payment for placed order
+- `POST /chat/schedule` - Schedule an order
 
 ### Orders
-- `GET /orders/current/:sessionId` - Get current order
-- `POST /orders/add-item` - Add item to order
-- `POST /orders/checkout/:sessionId` - Checkout order
-- `POST /orders/cancel/:sessionId` - Cancel order
-- `GET /orders/history/:sessionId` - Get order history
-- `POST /orders/schedule` - Schedule an order
+
+- `GET /orders/current/:sessionId`
+- `POST /orders/add-item`
+- `POST /orders/checkout/:sessionId`
+- `POST /orders/cancel/:sessionId`
+- `GET /orders/history/:sessionId`
+- `POST /orders/schedule`
 
 ### Menu
-- `GET /menu` - Get all menu items
-- `GET /menu/:id` - Get specific menu item
+
+- `GET /menu`
+- `GET /menu/:id`
 
 ### Payment
-- `POST /payment/initialize` - Initialize payment
-- `GET /payment/verify?reference=xxx` - Verify payment
 
-## Database
-
-The application uses SQLite database (stored as `restaurant.db`). The database is automatically created and seeded with sample menu items on first run.
+- `POST /payment/initialize`
+- `GET /payment/verify?reference=...`
+- `GET /payment/callback?reference=...`
 
 ## Project Structure
 
+```text
+src/
+   app.module.ts
+   main.ts
+   app.controller.ts
+   chat/
+   order/
+   menu/
+   payment/
+   entities/
+public/
+   index.html
+   styles.css
+   app.js
+restaurant.db
 ```
-restaurant-chatbot/
-├── src/
-│   ├── entities/          # Database entities
-│   ├── chat/              # Chat module
-│   ├── order/             # Order module
-│   ├── menu/              # Menu module
-│   ├── payment/           # Payment module
-│   ├── app.module.ts      # Root module
-│   └── main.ts            # Application entry point
-├── public/                # Frontend files
-│   ├── index.html
-│   ├── styles.css
-│   └── app.js
-├── .env.example           # Environment variables template
-└── README.md
-```
 
-## Technologies Used
+## Deployment (Render)
 
-- **NestJS** - Progressive Node.js framework
-- **TypeScript** - Typed JavaScript
-- **TypeORM** - ORM for database operations
-- **SQLite** - Lightweight database
-- **Paystack** - Payment gateway
-- **HTML/CSS/JavaScript** - Frontend interface
+1. Deploy the service.
+2. Set environment variables:
+    - `PAYSTACK_SECRET_KEY`
+    - `FRONTEND_URL` (your Render app URL)
+3. Redeploy and verify:
+    - `GET /health`
+    - payment initialization logs in Render
 
-## Testing with Paystack
+For deployment troubleshooting details, see `DEPLOYMENT_CHECKLIST.md`.
 
-1. Get your test API keys from [Paystack Dashboard](https://dashboard.paystack.com/#/settings/developer)
-2. Use test card numbers:
-   - **Card Number**: 4084084084084081
-   - **CVV**: 408
-   - **Expiry**: Any future date
-   - **PIN**: 0000
-   - **OTP**: 123456
+## Paystack Test Card
+
+- Card Number: `4084084084084081`
+- CVV: `408`
+- Expiry: any future date
+- PIN: `0000`
+- OTP: `123456`
 
 ## License
 
 ISC
-
-## Author
