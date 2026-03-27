@@ -4,9 +4,9 @@
   "description": "Restaurant chatbot that lets customers browse the menu, place orders, and pay online.",
   "main": "dist/main.js",
   "scripts": {
-    "build": "npx nest build",
+    "build": "node api.js && npx nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "npx nest start",
+    "start": "node api.js && npx nest start",
     "start:dev": "npx nest start --watch",
     "start:debug": "npx nest start --debug --watch",
     "start:prod": "node dist/main",

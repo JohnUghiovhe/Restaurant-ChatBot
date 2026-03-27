@@ -14,7 +14,9 @@ import { MenuItem } from './entities/menu-item.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'restaurant.db',
+      database:
+        process.env.DB_PATH ||
+        (process.env.VERCEL ? '/tmp/restaurant.db' : 'restaurant.db'),
       entities: [Session, Order, OrderItem, MenuItem],
       synchronize: true,
     }),
