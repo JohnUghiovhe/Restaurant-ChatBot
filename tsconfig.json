@@ -19,5 +19,6 @@
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
     "types": ["node"]
-  }
+  },
+  "exclude": ["dist", "node_modules", "api"]
 }

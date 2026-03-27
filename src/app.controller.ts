@@ -6,7 +6,8 @@ import { join } from 'path';
 export class AppController {
   @Get()
   getIndex(@Res() res: Response) {
-    res.sendFile(join(__dirname, '..', 'public', 'index.html'));
+    // Works both locally and on serverless bundles
+    res.sendFile(join(process.cwd(), 'public', 'index.html'));
   }
 
   @Get('health')
