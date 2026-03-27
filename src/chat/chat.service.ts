@@ -144,8 +144,9 @@ export class ChatService {
         order: currentOrder,
       };
     } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
       return {
-        message: `Error: ${error.message}`,
+        message: `Error: ${message}`,
         options: this.getMainMenuOptions(),
       };
     }
@@ -188,8 +189,9 @@ export class ChatService {
         order: order,
       };
     } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
       return {
-        message: `❌ Error: ${error.message}`,
+        message: `❌ Error: ${message}`,
         options: this.getMainMenuOptions(),
       };
     }
